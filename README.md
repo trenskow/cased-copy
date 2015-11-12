@@ -18,7 +18,7 @@ Copy JSON objects and transform key casing.
 
  * `'camel'` (lowercase)
  * `'pascal'` (uppercase)
- * `''` or absent (preserve case)
+ * anything else - or absent (preserve case)
 
 ## Example
 
