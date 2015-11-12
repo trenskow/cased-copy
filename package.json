@@ -1,7 +1,7 @@
 {
   "name": "cased-copy",
   "desciption": "Copy JSON objects and transform key casing.",
-	"version": "0.2.0",
+	"version": "0.2.1",
   "author": "Kristian Trenskow <trenskow@me.com>",
   "scripts": {
     "start": "node index.js",

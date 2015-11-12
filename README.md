@@ -31,7 +31,12 @@ Copy JSON objects and transform key casing.
 		'ANumber': 123,
 		'AnObject': {
 			'AString': 'a string'
-		}
+		},
+		'AnArray': [
+			{
+				'ABoolean': true
+			}
+		]
 	};
 
 	copy(obj, 'camel', function(camelCasedObj) {
@@ -44,7 +49,12 @@ The above outputs
 		"aNumber": 123,
 		"anObject": {
 			"aString": "a string"
-		}
+		},
+		"anArray": [
+			{
+				"aBoolean": true
+			}
+		]	
 	}
 
 Take the output object and copy it with `'pascal'` casing, and it comes back out uppercased.
