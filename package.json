@@ -1,6 +1,6 @@
 {
   "name": "cased-copy",
-  "desciption": "Copy JSON objects and transform key casing."
+  "desciption": "Copy JSON objects and transform key casing.",
 	"version": "0.1.0",
   "author": "Kristian Trenskow <trenskow@me.com>",
   "scripts": {
