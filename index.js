@@ -19,7 +19,7 @@ var copyObj = function(obj, casing, callback) {
 
 		copyAny(obj[key], casing, function(val) {
 			copy[copyKey] = val;
-			next();
+			async.setImmediate(next);
 		});
 
 	}, function() {
@@ -35,7 +35,7 @@ var copyArr = function(arr, casing, callback) {
 	async.eachSeries(arr, function(val, next) {
 		copyAny(val, casing, function(val) {
 			copy.push(val);
-			next();
+			async.setImmediate(next);
 		});
 	}, function() {
 		callback(copy);
