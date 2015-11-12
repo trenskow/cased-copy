@@ -3,6 +3,8 @@ Copy JSON objects and transform key casing.
 
 ----
 
+[![travis ci](https://travis-ci.org/trenskow/cased-copy.svg?branch=master)](https://travis-ci.org/trenskow/cased-copy)
+
 ## Install
 
     npm install --save cased-copy
