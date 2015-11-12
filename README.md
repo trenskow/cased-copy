@@ -12,6 +12,8 @@ Copy JSON objects and transform key casing.
 
 ## Usage
 
+	var copy = require('cased-copy')
+	
 	copy(obj, casing, callback)     // Async
     var objCopy = copy(obj, casing) // Sync
     
@@ -25,7 +27,7 @@ Copy JSON objects and transform key casing.
 
 ## Example
 
-    var copy = require('cased-copy');
+    var copy = require('cased-copy')
     
 	var obj = {
 		'ANumber': 123,
@@ -40,8 +42,8 @@ Copy JSON objects and transform key casing.
 	};
 
 	copy(obj, 'camel', function(camelCasedObj) {
-		console.log(JSON.stringify(camelCasedObj, null, 4));
-	});
+		console.log(JSON.stringify(camelCasedObj, null, 4))
+	})
     
 The above outputs
 
