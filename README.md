@@ -12,13 +12,16 @@ Copy JSON objects and transform key casing.
 
 ## Usage
 
-	copy(obj, casing, callback);
-	
+	copy(obj, casing, callback)     // Async
+    var objCopy = copy(obj, casing) // Sync
+    
 `casing` can have these values
 
  * `'camel'` (lowercase)
  * `'pascal'` (uppercase)
  * anything else - or absent (preserve case)
+
+> Asynchronous is non-blocking and allows for I/O. Recommended for large objects.
 
 ## Example
 
