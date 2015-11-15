@@ -1,16 +1,13 @@
 {
   "name": "cased-copy",
   "desciption": "Copy JSON objects and transform key casing.",
-	"version": "0.2.2",
+	"version": "0.2.3",
   "author": "Kristian Trenskow <trenskow@me.com>",
   "scripts": {
     "start": "node index.js",
 		"test": "./node_modules/mocha/bin/mocha test/*"
   },
   "license": "MIT",
-  "dependencies": {
-    "async": "^1.5.0"
-  },
   "devDependencies": {
     "chai": "^3.4.1",
     "mocha": "^2.3.3"

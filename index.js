@@ -1,100 +1,102 @@
 'use strict';
 
-var async = require('async');
+// This code handles both syncronous and asynchronous calls
+// - hence all the returns.
 
-var transformKey = function(key, casing) {
-
-	switch (casing) {
-		case 'camel':
-			return key.substr(0, 1).toLowerCase() + key.substr(1);
-		case 'pascal':
-			return key.substr(0, 1).toUpperCase() + key.substr(1);
-	}
-
-	return key;
-
+// Allow IO when used asynchronously.
+var handleIO = function(callback, sync) {
+	if (sync) return callback();
+	(setImmediate || (process || {}).nextTick || setTimeout)(callback);
 };
 
-var asyncCopyObj = function(obj, casing, callback) {
+var copyObj = function(obj, casing, callback, sync) {
 
+	var keys = Object.keys(obj);
+
+	// Final copy.
 	var copy = {};
 
-	async.eachSeries(Object.keys(obj), function(key, next) {
+	// Iterate keys.
+	return (function next(idx) {
 
-		var copyKey = transformKey(key, casing);
-		asyncCopyAny(obj[key], casing, function(val) {
-			copy[copyKey] = val;
-			async.setImmediate(next);
-		});
+		// If end of keys array return data.
+		if (idx == keys.length) return callback(copy);
 
-	}, function() {
-		callback(copy);
-	});
+		var key = keys[idx]
+		return copyAny(obj[key], casing, function(val) {
+			// Convert key casing.
+			if (casing === 'camel') key = key.substr(0, 1).toLowerCase() + key.substr(1);
+			if (casing === 'pascal') key = key.substr(0, 1).toUpperCase() + key.substr(1);
+
+			// Set copied value.
+			copy[key] = val;
+
+			// Handle next key.
+			return handleIO(function() {
+				return next(idx + 1);
+			}, sync);
+
+		}, sync);
+	}(0));
 
 };
 
-var asyncCopyArr = function(arr, casing, callback) {
+var copyArr = function(arr, casing, callback, sync) {
 
+	// Final copy.
 	var copy = [];
 
-	async.eachSeries(arr, function(val, next) {
-		asyncCopyAny(val, casing, function(val) {
+	// Iterate items.
+	return (function next(idx) {
+
+		// If end of array return data.
+		if (idx == arr.length) return callback(copy);
+
+		return copyAny(arr[idx], casing, function(val) {
+
+			// Push copied value.
 			copy.push(val);
-			async.setImmediate(next);
-		});
-	}, function() {
-		callback(copy);
-	});
+
+			// Handle next item.
+			return handleIO(function() {
+				return next(idx + 1);
+			}, sync);
+
+		}, sync);
+
+	}(0));
 
 };
 
-var asyncCopyAny = function(data, casing, callback) {
+var copyAny = function(data, casing, callback, sync) {
 
-	if (data && data.constructor.name === 'Object') return asyncCopyObj(data, casing, callback);
-	if (data && data.constructor.name === 'Array') return asyncCopyArr(data, casing, callback);
+	// Handle objects.
+	if (data && data.constructor.name === 'Object') return copyObj(data, casing, callback, sync);
+	// Handle arrays.
+	if (data && data.constructor.name === 'Array') return copyArr(data, casing, callback, sync);
 
-	callback(data);
-
-};
-
-var syncCopyObj = function(obj, casing) {
-
-	var copy = {};
-	Object.keys(obj).forEach(function(key) {
-		copy[transformKey(key, casing)] = syncCopyAny(obj[key], casing);
-	});
-	return copy;
-
-};
-
-var syncCopyArr = function(arr, casing) {
-
-	var copy = [];
-	for (var idx in arr) {
-		var item = arr[idx];
-		copy.push(syncCopyAny(item, casing));
-	}
-	return copy;
-
-};
-
-var syncCopyAny = function(data, casing) {
-
-	if (data && data.constructor.name === 'Object') return syncCopyObj(data, casing);
-	if (data && data.constructor.name === 'Array') return syncCopyArr(data, casing);
-
-	return data;
+	// - else just return data.
+	return callback(data);
 
 };
 
 exports = module.exports = function(data, casing, callback) {
 
+	// Handle missing `casing` parameter.
 	if (typeof casing === 'function' && !callback) {
 		callback = casing;
 		casing = undefined;
 	}
 
-	if (!callback) return syncCopyAny(data, casing);
-	asyncCopyAny(data, casing, callback);
+	// Setup for sync operation if `callback` is missing.
+	var sync = false;
+	if (typeof callback === 'undefined') {
+		// Sync operations just return their parameter.
+		callback = function(a) { return a; };
+		sync = true;
+	}
+
+	// Copy data.
+	return copyAny(data, casing, callback, sync);
 
 };
