@@ -1,6 +1,6 @@
 'use strict';
 
-// This code handles both syncronous and asynchronous calls
+// This code handles both synchronous and asynchronous calls
 // - hence all the returns.
 
 // Allow IO when used asynchronously.
@@ -24,6 +24,7 @@ var copyObj = function(obj, casing, callback, sync) {
 
 		var key = keys[idx]
 		return copyAny(obj[key], casing, function(val) {
+			
 			// Convert key casing.
 			if (casing === 'camel') key = key.substr(0, 1).toLowerCase() + key.substr(1);
 			if (casing === 'pascal') key = key.substr(0, 1).toUpperCase() + key.substr(1);
